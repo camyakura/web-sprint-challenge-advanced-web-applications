@@ -167,6 +167,7 @@ export default function App() {
       })
   }
 
+  const findArticle = articles.find(art => art.article_id === currentArticleId)
 
 
   return (
@@ -186,7 +187,7 @@ export default function App() {
           <Route path="articles" element={
             <>
               <ArticleForm 
-                article={articles.find(art => art.article_id === currentArticleId)}
+                article={findArticle}
                 submit={submit}
                 cancelUpdate={cancelUpdate}
               />
