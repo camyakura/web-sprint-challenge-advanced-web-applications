@@ -131,10 +131,6 @@ export default function App() {
     // You got this!
   }
 
-  const deleteArticle = article_id => {
-    // ✨ implement
-  }
-
   const submit = article => {
     if(currentArticleId) {
       putArticle(article)
@@ -146,6 +142,32 @@ export default function App() {
   const updateArticle = article_id => {
     setCurrentArticleId(article_id)
   }
+
+  const cancelUpdate = () => {
+    setCurrentArticleId(null)
+    setMessage('')
+  }
+
+  const deleteArticle = article_id => {
+    // ✨ implement
+    setMessage('')
+    setSpinnerOn(true)
+    axiosWithAuth().delete(`${articlesUrl}/${article_id}`)
+      .then(res => {
+        setMessage(res.data.message)
+        setArticles(articles.filter(art => {
+          return art.article_id !== article_id
+        }))
+      })
+      .catch(err => {
+        setMessage(err.response.data.message)
+      })
+      .finally(() => {
+        setSpinnerOn(false)
+      })
+  }
+
+
 
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
@@ -164,13 +186,15 @@ export default function App() {
           <Route path="articles" element={
             <>
               <ArticleForm 
-                submit={submit}
                 article={articles.find(art => art.article_id === currentArticleId)}
+                submit={submit}
+                cancelUpdate={cancelUpdate}
               />
               <Articles 
                 articles={articles}
                 getArticles={getArticles}
                 updateArticle={updateArticle}
+                deleteArticle={deleteArticle}
               />
             </>
           } />
