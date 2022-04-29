@@ -63,6 +63,20 @@ export default function App() {
   }
 
   const getArticles = () => {
+    setMessage('')
+    setSpinnerOn(true)
+    axiosWithAuth().get(articlesUrl)
+      .then(res => {
+        setArticles(res.data.articles)
+        setMessage(res.data.message)
+      })
+      .catch(err => {
+        setMessage(err.response.data.message)
+        redirectToLogin()
+      })
+      .finally(() => {
+        setSpinnerOn(false)
+      })
     // ✨ implement
     // We should flush the message state, turn on the spinner
     // and launch an authenticated request to the proper endpoint.
@@ -105,8 +119,13 @@ export default function App() {
           <Route path="/" element={<LoginForm  login={login}/>} />
           <Route path="articles" element={
             <>
-              <ArticleForm />
-              <Articles />
+              <ArticleForm 
+              
+              />
+              <Articles 
+                articles={articles}
+                getArticles={getArticles}
+              />
             </>
           } />
         </Routes>
