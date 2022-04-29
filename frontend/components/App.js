@@ -107,8 +107,27 @@ export default function App() {
     // to inspect the response from the server.
   }
 
-  const updateArticle = ({ article_id, article }) => {
+  const putArticle = ( article ) => {
     // ✨ implement
+    setMessage('')
+    setSpinnerOn(true)
+    const { article_id, ...changes } = article
+    axiosWithAuth().put(`${articlesUrl}/${article_id}`, changes)
+      .then(res => {
+        setArticles(articles.map(art => {
+          return art.article_id === article_id
+          ? res.data.article
+          : art 
+        }))
+        setMessage(res.data.message)
+        setCurrentArticleId(null)
+      })
+      .catch(err => {
+        setMessage(err.response.data.message)
+      })
+      .finally(() => {
+        setSpinnerOn(false)
+      })
     // You got this!
   }
 
@@ -116,11 +135,23 @@ export default function App() {
     // ✨ implement
   }
 
+  const submit = article => {
+    if(currentArticleId) {
+      putArticle(article)
+    } else {
+      postArticle(article)
+    }
+  }
+
+  const updateArticle = article_id => {
+    setCurrentArticleId(article_id)
+  }
+
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
     <React.StrictMode>
-      <Spinner />
-      <Message />
+      <Spinner on={spinnerOn}/>
+      <Message message={message}/>
       <button id="logout" onClick={logout}>Logout from app</button>
       <div id="wrapper" style={{ opacity: spinnerOn ? "0.25" : "1" }}> {/* <-- do not change this line */}
         <h1>Advanced Web Applications</h1>
@@ -133,13 +164,13 @@ export default function App() {
           <Route path="articles" element={
             <>
               <ArticleForm 
-                postArticle={postArticle}
+                submit={submit}
                 article={articles.find(art => art.article_id === currentArticleId)}
               />
               <Articles 
                 articles={articles}
                 getArticles={getArticles}
-                
+                updateArticle={updateArticle}
               />
             </>
           } />

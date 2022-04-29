@@ -6,7 +6,7 @@ const initialFormValues = { title: '', text: '', topic: '' }
 export default function ArticleForm(props) {
   const [values, setValues] = useState(initialFormValues)
   // ✨ where are my props? Destructure them here
-  const { postArticle, article, } = props
+  const { submit, article, } = props
 
   useEffect(() => {
     // ✨ implement
@@ -23,7 +23,7 @@ export default function ArticleForm(props) {
 
   const onSubmit = evt => {
     evt.preventDefault()
-    postArticle(values)
+    submit(values)
     setValues(initialFormValues)
     // ✨ implement
     // We must submit a new post or update an existing one,

@@ -7,6 +7,7 @@ export default function Articles(props) {
   const {
     articles,
     getArticles,
+    updateArticle,
   } = props
 
   // ✨ implement conditional logic: if no token exists
@@ -36,7 +37,7 @@ export default function Articles(props) {
                   <p>Topic: {art.topic}</p>
                 </div>
                 <div>
-                  <button disabled={true} onClick={Function.prototype}>Edit</button>
+                  <button onClick={evt => updateArticle(art.article_id)}>Edit</button>
                   <button disabled={true} onClick={Function.prototype}>Delete</button>
                 </div>
               </div>
